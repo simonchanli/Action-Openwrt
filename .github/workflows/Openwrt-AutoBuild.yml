@@ -94,23 +94,20 @@ jobs:
          cp -r -f user/${{matrix.target}}/files/* openwrt/package/base-files/files/
          fi
         
-        echo "Apply custom.sh"
-        if [ -f "user/default/custom.sh" ]; then
-        (
+         echo "Apply custom.sh"
+         if [ -f "user/default/custom.sh" ]; then
+         (
            cd openwrt
            /bin/bash "../user/default/custom.sh"
          )
-         fi
-        
-        if [ -f "user/${{matrix.target}}/custom.sh" ]; then
-        (
+         fi       
+         if [ -f "user/${{matrix.target}}/custom.sh" ]; then
+         (
            cd openwrt
            /bin/bash "../user/${{matrix.target}}/custom.sh"
          )
          fi
-
-
-
+         
     - name: Download package
       id: package
       run: |
