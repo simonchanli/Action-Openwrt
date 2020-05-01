@@ -221,7 +221,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       uses: actions/upload-artifact@master
       with:
-        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: OpenWrt_firmware_${{matrix.target}}
         path: ${{ env.FIRMWARE }}      
        
     - name: WeChat notification
