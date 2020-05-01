@@ -184,14 +184,14 @@ jobs:
       if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress openwrt/bin/packages/${{matrix.target}}_packages.tar
+         ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/packages/${{matrix.target}}_packages.tar
         rm -rf openwrt/bin/packages/${{matrix.target}}_packages.tar
         
     - name: Upload Targetss to WeTransfer
       if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress openwrt/bin/targets/${{matrix.target}}_targets.tar
+         ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/targets/${{matrix.target}}_targets.tar
         rm -rf openwrt/bin/targets/${{matrix.target}}_targets.tar
         
 
