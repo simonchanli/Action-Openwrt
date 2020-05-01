@@ -9,7 +9,7 @@ sed -i  's/http:/snapshots/g'  package/lean/default-settings/files/zzz-default-s
 sed -i 's/R20\(.[0-9].[0-9]\)/R20.5.1/g' package/lean/default-settings/files/zzz-default-settings
 
 git clone https://github.com/hyird/passwall.git                     package/passwall
-glt clone https://github.com/Mrbai98/luci-theme-atmaterial.git      package/luci-theme-atmaterial
+git clone https://github.com/Mrbai98/luci-theme-atmaterial.git      package/luci-theme-atmaterial
 git clone https://github.com/vernesong/OpenClash.git                package/clash
 svn checkout https://github.com/Lienol/openwrt/trunk/package/diy/luci-app-adguardhome package/adg
  
