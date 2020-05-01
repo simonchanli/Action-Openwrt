@@ -6,6 +6,5 @@
  src-git routing https://git.openwrt.org/feed/routing.git;openwrt-19.07
 -#src-git telephony https://git.openwrt.org/feed/telephony.git;openwrt-19.07
 -#src-git helloworld https://github.com/fw876/helloworld
-\ No newline at end of file
 +src-git helloworld https://github.com/fw876/helloworld
 +src-git lienol https://github.com/Lienol/openwrt-package
