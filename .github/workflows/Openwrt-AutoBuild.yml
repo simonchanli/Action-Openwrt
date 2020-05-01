@@ -68,9 +68,9 @@ jobs:
     - name: Apply Patches
       run: | 
         echo "Apply patches"
-        if [ -n "$(ls -A "user/default/patches" 2>/dev/null)" ]; then
+        if [ -n "$(ls -A "user/common/patches" 2>/dev/null)" ]; then
         (
-          find "user/default/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d 'openwrt' -p0 --forward"
+          find "user/common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d 'openwrt' -p0 --forward"
         )
         fi
 
@@ -88,18 +88,18 @@ jobs:
     - name: Load custom configuration
       run: |        
          echo "Apply files..."
-         if [ -n "$(ls -A "user/default/files" 2>/dev/null)" ]; then
-         cp -r -f user/default/files/* openwrt/package/base-files/files/
+         if [ -n "$(ls -A "user/common/files" 2>/dev/null)" ]; then
+         cp -r -f user/common/files/* openwrt/package/base-files/files/
          fi
          if [ -n "$(ls -A "user/${{matrix.target}}/files" 2>/dev/null)" ]; then
          cp -r -f user/${{matrix.target}}/files/* openwrt/package/base-files/files/
          fi
         
          echo "Apply custom.sh"
-         if [ -f "user/default/custom.sh" ]; then
+         if [ -f "user/common/custom.sh" ]; then
          (
            cd openwrt
-           /bin/bash "../user/default/custom.sh"
+           /bin/bash "../user/common/custom.sh"
          )
          fi       
          if [ -f "user/${{matrix.target}}/custom.sh" ]; then
