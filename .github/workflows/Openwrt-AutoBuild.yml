@@ -55,7 +55,6 @@ jobs:
         echo "::set-env name=UPLOAD_FIRMWARE::${UPLOAD_FIRMWARE}"
         echo "::set-env name=UPLOAD_TO_ARTIFACTS::${UPLOAD_TO_ARTIFACTS}"
         echo "::set-env name=UPLOAD_TO_REALEASE::${UPLOAD_TO_REALEASE}"
-        echo "::set-env name=UPLOAD_TO_BRANCH::${UPLOAD_TO_BRANCH}"
         echo "::set-env name=UPLOAD_TO_COWTRANSFER::${UPLOAD_TO_COWTRANSFER}"
         echo "::set-env name=WECHAT_NOTIFICATION::${WECHAT_NOTIFICATION}"
         
@@ -125,36 +124,19 @@ jobs:
         cd openwrt
         echo -e "2 thread compile"
         make -j2 || make -j1 V=s
+        echo "::set-output name=status::success"
         
-    - name:  Push packages
-      if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_BRANCH == 'true' && !cancelled()
-      env:
-       SUPER_TOKEN: ${{ secrets.SUPER_TOKEN }}
+    - name:  Pack packages_dir
       run: |
         cd openwrt/bin/packages/
-        git init
-        git config user.name "bot"
-        git config user.email "bot@github.com"
-        git add .
-        git commit -m "$DATE"
-        git push --force --quiet https://$SUPER_TOKEN@github.com/${{ github.repository }}.git  HEAD:${{matrix.target}}_packages
-        rm -rf .git
         tar -cvf  ${{matrix.target}}_packages.tar ./
+        mv *.tar ..
         
-    - name:  Push targets
-      if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_BRANCH == 'true' && !cancelled()
-      env:
-       SUPER_TOKEN: ${{ secrets.SUPER_TOKEN }}
+    - name:  Pack targets_dir
       run: |
         cd openwrt/bin/targets/
-        git init
-        git config user.name "bot"
-        git config user.email "bot@github.com"
-        git add .
-        git commit -m "$DATE"
-        git push --force --quiet https://$SUPER_TOKEN@github.com/${{ github.repository }}.git  HEAD:${{matrix.target}}_targets
-        rm -rf .git
         tar -cvf  ${{matrix.target}}_targets.tar ./
+        mv *.tar ..
 
     
     - name: Upload Packages to release
@@ -162,7 +144,7 @@ jobs:
       uses: svenstaro/upload-release-action@v1-release
       with:
         repo_token: ${{ secrets.SUPER_TOKEN }}
-        file: openwrt/bin/packages/${{matrix.target}}_packages.tar
+        file: openwrt/bin/${{matrix.target}}_packages.tar
         asset_name: ${{matrix.target}}_packages.tar
         tag: ${{ env.DATE }}
         overwrite: true
@@ -173,7 +155,7 @@ jobs:
       uses: svenstaro/upload-release-action@v1-release
       with:
         repo_token: ${{ secrets.SUPER_TOKEN }}
-        file: openwrt/bin/targets/${{matrix.target}}_targets.tar
+        file: openwrt/bin/${{matrix.target}}_targets.tar
         asset_name: ${{matrix.target}}_targets.tar
         tag: ${{ env.DATE }}
         overwrite: true
@@ -184,15 +166,13 @@ jobs:
       if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-         ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/packages/${{matrix.target}}_packages.tar
-        rm -rf openwrt/bin/packages/${{matrix.target}}_packages.tar
+         ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/${{matrix.target}}_packages.tar
         
     - name: Upload Targetss to WeTransfer
       if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-         ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/targets/${{matrix.target}}_targets.tar
-        rm -rf openwrt/bin/targets/${{matrix.target}}_targets.tar
+         ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/${{matrix.target}}_targets.tar
         
 
     - name: Upload packages directory
