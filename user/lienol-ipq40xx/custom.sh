@@ -2,7 +2,7 @@
 
 echo "Test custom.sh"
 
-source ../../version
+source ../version
 
 sed -i '/lienol/d'                         package/default-settings/files/zzz-default-settings
 sed -i '/shadow/d'                     package/default-settings/files/zzz-default-settings
