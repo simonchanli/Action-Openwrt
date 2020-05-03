@@ -52,7 +52,6 @@ jobs:
         echo "::set-env name=REPO_BRANCH::${REPO_BRANCH}"
         echo "::set-env name=UPLOAD_PACKAGES_DIR::${UPLOAD_PACKAGES_DIR}"
         echo "::set-env name=UPLOAD_TARGETS_DIR::${UPLOAD_TARGETS_DIR}"
-        echo "::set-env name=UPLOAD_FIRMWARE::${UPLOAD_FIRMWARE}"
         echo "::set-env name=UPLOAD_TO_ARTIFACTS::${UPLOAD_TO_ARTIFACTS}"
         echo "::set-env name=UPLOAD_TO_REALEASE::${UPLOAD_TO_REALEASE}"
         echo "::set-env name=UPLOAD_TO_COWTRANSFER::${UPLOAD_TO_COWTRANSFER}"
