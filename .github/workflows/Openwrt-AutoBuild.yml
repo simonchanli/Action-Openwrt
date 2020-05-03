@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [lienol-ipq40xx,lienol-x64] 
+        target: [lienol-x64,lienol-ipq40xx,lienol-mt7621] 
     
     steps:
     - name: Checkout
