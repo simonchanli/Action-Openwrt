@@ -1,5 +1,5 @@
---- old/config-4.14	2020-05-05 11:02:33.405670300 +0800
-+++ config-4.14	2020-05-03 21:06:21.000000000 +0800
+--- target/linux/ramips/mt7621/config-4.14	2020-05-05 11:02:33.405670300 +0800
++++ target/linux/ramips/mt7621/config-4.14	2020-05-03 21:06:21.000000000 +0800
 @@ -200,6 +200,7 @@
  # CONFIG_MTD_UBI_FASTMAP is not set
  # CONFIG_MTD_UBI_GLUEBI is not set
