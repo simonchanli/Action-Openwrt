@@ -126,12 +126,14 @@ jobs:
         echo "::set-output name=status::success"
         
     - name:  Pack packages_dir
+      if: steps.compile.outputs.status == 'success'
       run: |
         cd openwrt/bin/packages/
         tar -cvf  ${{matrix.target}}_packages.tar ./
         mv *.tar ..
         
     - name:  Pack targets_dir
+      if: steps.compile.outputs.status == 'success'
       run: |
         cd openwrt/bin/targets/
         tar -cvf  ${{matrix.target}}_targets.tar ./
@@ -139,7 +141,7 @@ jobs:
 
     
     - name: Upload Packages to release
-      if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_REALEASE == 'true' && !cancelled()
+      if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_REALEASE == 'true' && !cancelled() && if: steps.compile.outputs.status == 'success'
       uses: svenstaro/upload-release-action@v1-release
       with:
         repo_token: ${{ secrets.SUPER_TOKEN }}
@@ -150,7 +152,7 @@ jobs:
         file_glob: true
 
     - name: Upload Targets to release
-      if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_REALEASE == 'true' && !cancelled()
+      if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_REALEASE == 'true' && !cancelled() && if: steps.compile.outputs.status == 'success'
       uses: svenstaro/upload-release-action@v1-release
       with:
         repo_token: ${{ secrets.SUPER_TOKEN }}
@@ -162,32 +164,32 @@ jobs:
 
         
     - name: Upload Packages to CowTransfer
-      if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled()
+      if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled() && if: steps.compile.outputs.status == 'success'
       run: |
         curl -fsSL git.io/file-transfer | sh
          ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/${{matrix.target}}_packages.tar
         
     - name: Upload Targetss to CowTransfer
-      if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled()
+      if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_COWTRANSFER == 'true' && !cancelled() &&　if: steps.compile.outputs.status == 'success'
       run: |
         curl -fsSL git.io/file-transfer | sh
          ./transfer cow --block 2621440 -s -p 64 --no-progress openwrt/bin/${{matrix.target}}_targets.tar
         
 
     - name: Upload packages directory
-      if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_ARTIFACTS == 'true' && !cancelled()
+      if: env.UPLOAD_PACKAGES_DIR == 'true' && env.UPLOAD_TO_ARTIFACTS == 'true' && !cancelled()　&& if: steps.compile.outputs.status == 'success'
       uses: actions/upload-artifact@master
       with:
         name: OpenWrt_packages_${{matrix.target}}
         path: openwrt/bin/packages
         
     - name: Upload targets directory
-      if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_ARTIFACTS == 'true' && !cancelled()
+      if: env.UPLOAD_TARGETS_DIR == 'true' && env.UPLOAD_TO_ARTIFACTS == 'true' && !cancelled() && if: steps.compile.outputs.status == 'success'
       uses: actions/upload-artifact@master
       with:
         name: OpenWrt_targets_${{matrix.target}}
         path: openwrt/bin/targets
                
     - name: WeChat notification
-      if: env.WECHAT_NOTIFICATION == 'true' && !cancelled()
+      if: env.WECHAT_NOTIFICATION == 'true' && !cancelled() && if: steps.compile.outputs.status == 'success'
       run: curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=${{matrix.target}}编译完成
